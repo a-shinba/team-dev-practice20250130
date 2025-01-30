@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>メモ帳アプリ</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,11 +69,23 @@
     </style>
 </head>
 <body>
-    <h1>メモ帳アプリ</h1>
-    <textarea id="memoInput" placeholder="ここにメモを入力してください"></textarea>
-    <button onclick="saveMemo()">保存</button>
-    <input type="text" id="searchInput" class="search-bar" placeholder="メモを検索">
-    <div id="memoDisplay"></div>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">ホーム</a></li>
+                <li><a href="memoapp.html">メモアプリ</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>   
+        <h1>メモ帳アプリ</h1>
+        <textarea id="memoInput" placeholder="ここにメモを入力してください"></textarea>
+        <button onclick="saveMemo()">保存</button>
+        <input type="text" id="searchInput" class="search-bar" placeholder="メモを検索">
+        <div id="memoDisplay"></div>
+    </main>
+ 
+    
 
     <script>
         let memos = JSON.parse(localStorage.getItem('memos')) || [];

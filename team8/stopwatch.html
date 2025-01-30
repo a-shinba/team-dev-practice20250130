@@ -22,8 +22,9 @@
     <div class="stopwatch">
         <div id="time">00:00:00</div>
         <button id="startStopBtn">スタート</button>
+        <button id="rapBtn">ラップ</button>
         <button id="resetBtn">リセット</button>
-        <button><a href="./workshop1.html">戻る</a></button>
+        <a href="./workshop1.html" class="btn btn--yellow btn--circle">戻る</a>
     </div>
 
     <script>
@@ -32,9 +33,11 @@
         let difference;
         let timerInterval;
         let running = false;
+        let rapcount = 0;
 
         const timeDisplay = document.getElementById('time');
         const startStopBtn = document.getElementById('startStopBtn');
+        const rapBtn = document.getElementById('rapBtn');
         const resetBtn = document.getElementById('resetBtn');
 
         function startStopwatch() {
@@ -46,6 +49,14 @@
         function stopStopwatch() {
             clearInterval(timerInterval);
             startStopBtn.textContent = 'スタート';
+        }
+
+        function rapStopwatch() {
+            rapcount++;
+            let lapTime = timeDisplay.textContent;
+            let lap = document.createElement('div');
+            lap.textContent = `ラップ${rapcount}: ${lapTime}`;
+            document.body.appendChild(lap);
         }
 
         function updateTime() {
@@ -79,6 +90,10 @@
 
         resetBtn.addEventListener('click', () => {
             resetStopwatch();
+        });
+
+        rapBtn.addEventListener('click', () => {
+            rapStopwatch();
         });
     </script>
 </body>

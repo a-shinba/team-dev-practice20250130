@@ -1,5 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
+<head>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        #buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        #display {
+            text-align: right;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 200px;
+        }
+    </style>
+</head>
 <body>
 
 <h1>シンプルな計算機</h1>
@@ -9,19 +31,21 @@
 <br>
 
 <div id="buttons">
-    <button onclick="appendNumber(0)">0</button>
-    <button onclick="appendNumber(1)">1</button>
-    <button onclick="appendNumber(2)">2</button>
-    <button onclick="appendNumber(3)">3</button>
-    <button onclick="appendNumber(4)">4</button>
-    <button onclick="appendNumber(5)">5</button>
-    <button onclick="appendNumber(6)">6</button>
     <button onclick="appendNumber(7)">7</button>
     <button onclick="appendNumber(8)">8</button>
     <button onclick="appendNumber(9)">9</button>
+    <button onclick="appendNumber(4)">4</button>
+    <button onclick="appendNumber(5)">5</button>
+    <button onclick="appendNumber(6)">6</button>
+    <button onclick="appendNumber(1)">1</button>
+    <button onclick="appendNumber(2)">2</button>
+    <button onclick="appendNumber(3)">3</button>
+    <button onclick="appendNumber(0)">0</button>
     <button onclick="add()">+</button>
     <button onclick="calculate()">=</button>
 </div>
+
+<a href="welcome.html">ウェルカムに戻る</a>
 
 <script>
 let operand1 = '';
@@ -38,7 +62,9 @@ function appendNumber(number) {
 }
 
 function add() {
-    operator = '+';
+    if (operand1 !== '') {
+        operator = '+';
+    }
     updateDisplay();
 }
 

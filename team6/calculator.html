@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>シンプルな計算機</h1>
+
+<input id="display" type="text" readonly>
+
+<br>
+
+<div id="buttons">
+    <button onclick="appendNumber(0)">0</button>
+    <button onclick="appendNumber(1)">1</button>
+    <button onclick="appendNumber(2)">2</button>
+    <button onclick="appendNumber(3)">3</button>
+    <button onclick="appendNumber(4)">4</button>
+    <button onclick="appendNumber(5)">5</button>
+    <button onclick="appendNumber(6)">6</button>
+    <button onclick="appendNumber(7)">7</button>
+    <button onclick="appendNumber(8)">8</button>
+    <button onclick="appendNumber(9)">9</button>
+    <button onclick="add()">+</button>
+    <button onclick="calculate()">=</button>
+</div>
+
+<script>
+let operand1 = '';
+let operand2 = '';
+let operator = null;
+
+function appendNumber(number) {
+    if (operator === null) {
+        operand1 += number;
+    } else {
+        operand2 += number;
+    }
+    updateDisplay();
+}
+
+function add() {
+    operator = '+';
+    updateDisplay();
+}
+
+function calculate() {
+    if (operator === '+') {
+        let result = parseInt(operand1) + parseInt(operand2);
+        operand1 = result;
+        operand2 = '';
+        operator = null;
+    }
+    updateDisplay();
+}
+
+function updateDisplay() {
+    let displayValue = operand1;
+    if (operator !== null) {
+        displayValue += operator;
+    }
+    if (operand2 !== '') {
+        displayValue += operand2;
+    }
+    document.getElementById('display').value = displayValue;
+}
+</script>
+
+</body>
+</html>

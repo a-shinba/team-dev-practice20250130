@@ -1,6 +1,6 @@
 body html {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    background-color: #cdcdd1;
 }
 
 .container {
@@ -10,6 +10,7 @@ body html {
     flex-direction: column;
     background-color: #fff;
     padding: 20px;
+    margin:120px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メモ帳アプリ</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+<h1>メモ帳アプリ</h1>
+<textarea id="memoInput" placeholder="ここにメモを入力してください"></textarea>
+<button onclick="saveMemo()">保存</button>
+<div id="memoDisplay" class="memo"></div>
+
+<script>
+    function saveMemo() {
+        const memo = document.getElementById('memoInput').value;
+        if (!memo.trim()) return alert("メモを入力してください");
+
+        let memos = JSON.parse(localStorage.getItem('memos')) || [];
+        memos.push({ content: memo });
+        localStorage.setItem('memos', JSON.stringify(memos));
+
+        document.getElementById('memoInput').value = "";
+        fetchMemos();
+    }
+
+    function fetchMemos() {
+        const memos = JSON.parse(localStorage.getItem('memos')) || [];
+        const memoDisplay = document.getElementById("memoDisplay");
+        memoDisplay.innerHTML = memos.map(memo => `<p>${memo.content}</p>`).join("");
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchMemos);
+</script>
+</body>
+</html>

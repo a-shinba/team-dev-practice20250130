@@ -5,28 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ストップウォッチ</title>
     <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        #container {
+            text-align: center;
+        }
         #time {
-            font-size: 2em;
+            font-size: 3em;
             margin-bottom: 20px;
+        }
+        button {
+            font-size: 1em;
+            padding: 10px 20px;
+            margin: 5px;
         }
     </style>
 </head>
 <body>
-    <div id="time">00:00:00.</div>
-    <button id="startStopBtn">スタート</button>
+    <div id="container">
+        <div id="time">00:00:00.000</div>
+        <button id="startStopBtn">スタート</button>
+        <button id="resetBtn">リセット</button>
+    </div>
 
     <script>
         let startTime;
         let updatedTime;
-        let difference;
+        let difference = 0;
         let timerInterval;
         let running = false;
 
         const timeDisplay = document.getElementById('time');
         const startStopBtn = document.getElementById('startStopBtn');
+        const resetBtn = document.getElementById('resetBtn');
 
         function startStopwatch() {
-            startTime = new Date().getTime();
+            startTime = new Date().getTime() - difference;
             timerInterval = setInterval(updateTime, 1);
         }
 
@@ -45,7 +66,7 @@
             milliseconds = milliseconds.toString().padStart(3, '0');
 
             timeDisplay.innerHTML = hours + ":" + minutes + ":" + seconds + "." + milliseconds;
-        }       
+        }
 
         startStopBtn.addEventListener('click', function() {
             if (!running) {
@@ -57,6 +78,14 @@
                 startStopBtn.textContent = 'スタート';
                 running = false;
             }
+        });
+
+        resetBtn.addEventListener('click', function() {
+            clearInterval(timerInterval);
+            running = false;
+            difference = 0;
+            timeDisplay.innerHTML = "00:00:00.000";
+            startStopBtn.textContent = 'スタート';
         });
     </script>
 </body>

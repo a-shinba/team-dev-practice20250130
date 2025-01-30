@@ -64,7 +64,7 @@
         let difference = 0;
         let timerInterval;
         let running = false;
-        let alarmTime = localStorage.getItem('alarmTime') || null;
+        let alarmTime = null;
 
         const timeDisplay = document.getElementById('time');
         const startBtn = document.getElementById('startBtn');
@@ -115,20 +115,17 @@
             if (alarmTime && timeDisplay.textContent === alarmTime) {
                 alert('アラーム時間です！');
                 alarmTime = null;
-                localStorage.removeItem('alarmTime');
                 stopAlarmBtn.style.display = 'block';
             }
         }
 
         function setAlarm() {
             alarmTime = alarmInput.value;
-            localStorage.setItem('alarmTime', alarmTime);
             stopAlarmBtn.style.display = 'none';
         }
 
         function stopAlarm() {
             alarmTime = null;
-            localStorage.removeItem('alarmTime');
             stopAlarmBtn.style.display = 'none';
         }
 
@@ -145,11 +142,6 @@
         setAlarmBtn.addEventListener('click', setAlarm);
         stopAlarmBtn.addEventListener('click', stopAlarm);
         lapBtn.addEventListener('click', recordLap);
-
-        // ページ読み込み時にアラーム時間を復元
-        if (alarmTime) {
-            alarmInput.value = alarmTime;
-        }
     </script>
 </body>
 </html>

@@ -20,6 +20,7 @@
     <button onclick="appendNumber(8)">8</button>
     <button onclick="appendNumber(9)">9</button>
     <button onclick="add()">+</button>
+    <button onclick="div()">/</button>
     <button onclick="calculate()">=</button>
 </div>
 
@@ -42,9 +43,24 @@ function add() {
     updateDisplay();
 }
 
+function div() {
+    operator = '/';
+    updateDisplay();
+}
+
 function calculate() {
     if (operator === '+') {
         let result = parseInt(operand1) + parseInt(operand2);
+        operand1 = result;
+        operand2 = '';
+        operator = null;
+    }
+    if (operator === '/') {
+        if (parseInt(operand2) == 0) {
+            alert('0で割ることはできません');
+            return;
+        }
+        let result = parseInt(operand1) / parseInt(operand2);
         operand1 = result;
         operand2 = '';
         operator = null;

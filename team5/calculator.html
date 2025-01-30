@@ -20,6 +20,8 @@
     <button onclick="appendNumber(8)">8</button>
     <button onclick="appendNumber(9)">9</button>
     <button onclick="add()">+</button>
+    <button onclick="subtract()">-</button>
+    <button onclick="multiply()">×</button>
     <button onclick="div()">/</button>
     <button onclick="calculate()">=</button>
 </div>
@@ -43,6 +45,16 @@ function add() {
     updateDisplay();
 }
 
+function subtract() {
+    operator = '-';
+    updateDisplay();
+}
+
+function multiply() {
+    operator = '*';
+    updateDisplay();
+}
+
 function div() {
     operator = '/';
     updateDisplay();
@@ -55,7 +67,17 @@ function calculate() {
         operand2 = '';
         operator = null;
     }
-    if (operator === '/') {
+    else if (operator === '-') {
+        let result = parseInt(operand1) - parseInt(operand2);
+        operand1 = result;
+    }
+    else if (operator === '*') {
+        let result = parseInt(operand1) * parseInt(operand2);
+        operand1 = result;
+        operand2 = '';
+        operator = null;
+    }
+    else if (operator === '/') {
         if (parseInt(operand2) == 0) {
             alert('0で割ることはできません');
             return;

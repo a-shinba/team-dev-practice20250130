@@ -15,7 +15,6 @@
 </div>
 <a href="./workshop1.html">戻る</a>
 
-
 <script>
     function saveMemo() {
         const memo = document.getElementById('memoInput').value;
@@ -32,7 +31,19 @@
     function fetchMemos() {
         const memos = JSON.parse(localStorage.getItem('memos')) || [];
         const memoDisplay = document.getElementById("memoDisplay");
-        memoDisplay.innerHTML = memos.map(memo => `<p class="memo">${memo.content}</p>`).join("");
+        memoDisplay.innerHTML = memos.map((memo, index) => `
+            <div class="memo">
+                <p>${memo.content}</p>
+                <button class="delate-button" onclick="deleteMemo(${index})">削除</button>
+            </div>
+        `).join("");
+    }
+
+    function deleteMemo(index) {
+        let memos = JSON.parse(localStorage.getItem('memos')) || [];
+        memos.splice(index, 1);
+        localStorage.setItem('memos', JSON.stringify(memos));
+        fetchMemos();
     }
 
     document.addEventListener("DOMContentLoaded", fetchMemos);

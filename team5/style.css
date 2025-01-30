@@ -1,3 +1,8 @@
+body{
+    background-image: url('https://game-materials.com/wp-content/uploads/2023/10/white2.jpg');
+    background-size: cover;
+    background-position: center;
+}
 button {
     background-color: #FFCC99;
     border: none; /* Remove borders */

@@ -22,6 +22,11 @@
             width: 100%;
             max-width: 200px;
         }
+        #log {
+            margin-top: 20px;
+            max-width: 200px;
+            text-align: left;
+        }
     </style>
     <title>計算機</title>
 </head>
@@ -53,6 +58,8 @@
 </div>
 
 <a href="welcome.html">ウェルカムに戻る</a>
+
+<div id="log"></div>
 
 <script>
 let operand1 = '';
@@ -91,6 +98,7 @@ function calculate() {
             result = parseInt(operand1) / parseInt(operand2);
             break;
     }
+    logCalculation(operand1, operator, operand2, result);
     operand1 = result;
     operand2 = '';
     operator = null;
@@ -113,6 +121,13 @@ function updateDisplay() {
         displayValue += operand2;
     }
     document.getElementById('display').value = displayValue;
+}
+
+function logCalculation(op1, operator, op2, result) {
+    const logDiv = document.getElementById('log');
+    const logEntry = document.createElement('div');
+    logEntry.textContent = `${op1} ${operator} ${op2} = ${result}`;
+    logDiv.appendChild(logEntry);
 }
 </script>
 

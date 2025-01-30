@@ -20,8 +20,9 @@
         const memo = document.getElementById('memoInput').value;
         if (!memo.trim()) return alert("メモを入力してください");
 
+        const date = new Date().toLocaleString();
         let memos = JSON.parse(localStorage.getItem('memos')) || [];
-        memos.push({ content: memo });
+        memos.push({ content: memo, date: date });
         localStorage.setItem('memos', JSON.stringify(memos));
 
         document.getElementById('memoInput').value = "";
@@ -34,7 +35,9 @@
         memoDisplay.innerHTML = memos.map((memo, index) => `
             <div class="memo">
                 <p>${memo.content}</p>
-                <button class="delate-button" onclick="deleteMemo(${index})">削除</button>
+                <button class="delete-button" onclick="deleteMemo(${index})">削除</button>
+                <small>${memo.date}</small>
+
             </div>
         `).join("");
     }

@@ -11,19 +11,27 @@
             height: 100vh;
             flex-direction: column;
         }
+        #container {
+            display: flex;
+            flex-direction: row;
+        }
         #buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
+        #buttons button {
+            font-size: 1.6em; /* 2emの0.8倍 */
+            padding: 32px; /* 40pxの0.8倍 */
+        }
         #display {
             text-align: right;
             margin-bottom: 20px;
-            width: 100%;
-            max-width: 200px;
+            width: calc(2 * (4 * 32px + 3 * 10px)); /* ボタンの横幅の2倍に合わせる */
+            max-width: 100%;
         }
         #log {
-            margin-top: 20px;
+            margin-left: 20px;
             max-width: 200px;
             text-align: left;
         }
@@ -34,32 +42,33 @@
 
 <h1>シンプルな計算機</h1>
 
-<input id="display" type="text" readonly>
-
-<br>
-
-<div id="buttons">
-    <button onclick="appendNumber(7)">7</button>
-    <button onclick="appendNumber(8)">8</button>
-    <button onclick="appendNumber(9)">9</button>
-    <button onclick="setOperator('+')">+</button>
-    <button onclick="appendNumber(4)">4</button>
-    <button onclick="appendNumber(5)">5</button>
-    <button onclick="appendNumber(6)">6</button>
-    <button onclick="setOperator('-')">-</button>
-    <button onclick="appendNumber(1)">1</button>
-    <button onclick="appendNumber(2)">2</button>
-    <button onclick="appendNumber(3)">3</button>
-    <button onclick="setOperator('*')">*</button>
-    <button onclick="appendNumber(0)">0</button>
-    <button onclick="calculate()">=</button>
-    <button onclick="clearDisplay()">C</button>
-    <button onclick="setOperator('/')">/</button>
+<div id="container">
+    <div>
+        <input id="display" type="text" readonly>
+        <br>
+        <div id="buttons">
+            <button onclick="appendNumber(7)">7</button>
+            <button onclick="appendNumber(8)">8</button>
+            <button onclick="appendNumber(9)">9</button>
+            <button onclick="setOperator('+')">+</button>
+            <button onclick="appendNumber(4)">4</button>
+            <button onclick="appendNumber(5)">5</button>
+            <button onclick="appendNumber(6)">6</button>
+            <button onclick="setOperator('-')">-</button>
+            <button onclick="appendNumber(1)">1</button>
+            <button onclick="appendNumber(2)">2</button>
+            <button onclick="appendNumber(3)">3</button>
+            <button onclick="setOperator('*')">*</button>
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendNumber(0)">0</button>
+            <button onclick="calculate()">=</button>
+            <button onclick="setOperator('/')">/</button>
+        </div>
+    </div>
+    <div id="log"></div>
 </div>
 
-<a href="workshop1.html">ウェルカムに戻る</a>
-
-<div id="log"></div>
+<a href="workshop1.html">ワークショップに戻る</a>
 
 <script>
 let operand1 = '';
@@ -127,7 +136,7 @@ function logCalculation(op1, operator, op2, result) {
     const logDiv = document.getElementById('log');
     const logEntry = document.createElement('div');
     logEntry.textContent = `${op1} ${operator} ${op2} = ${result}`;
-    logDiv.appendChild(logEntry);
+    logDiv.insertBefore(logEntry, logDiv.firstChild);
 }
 </script>
 

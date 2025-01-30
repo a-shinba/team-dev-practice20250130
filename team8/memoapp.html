@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メモ帳アプリ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #ffffe0; /* 背景色を変更 */
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        button {
+            margin-top: 10px;
+        }
+        .memo {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f8ff; /* メモ内容の背景色を変更 */
+        }
+        .timestamp {
+            align-self: flex-end;
+            font-size: 0.8em;
+            color: #888;
+        }
+        .delete-button {
+            align-self: flex-end;
+            font-size: 0.8em;
+            color: red;
+            cursor: pointer;
+        }
+        .edit-button {
+            align-self: flex-end;
+            font-size: 0.8em;
+            color: blue;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>メモ帳アプリ</h1>
+    <textarea id="memoInput" placeholder="ここにメモを入力してください"></textarea>
+    <button onclick="saveMemo()">保存</button>
+    <div id="memoDisplay"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            loadMemos();
+        });
+
+        function saveMemo() {
+            var memo = document.getElementById('memoInput').value;
+            if (memo.trim() === '') return; // 空のメモは保存しない
+
+            var memos = JSON.parse(localStorage.getItem('memos')) || [];
+            var now = new Date();
+            var memoObject = {
+                text: memo,
+                timestamp: now.toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })
+            };
+            memos.push(memoObject);
+            localStorage.setItem('memos', JSON.stringify(memos));
+
+            displayMemo(memoObject);
+            document.getElementById('memoInput').value = ''; // 入力欄をクリア
+        }
+
+        function loadMemos() {
+            var memos = JSON.parse(localStorage.getItem('memos')) || [];
+            memos.forEach(memo => displayMemo(memo));
+        }
+
+        function displayMemo(memoObject) {
+            var memoDisplay = document.getElementById('memoDisplay');
+            var newMemo = document.createElement('div');
+            newMemo.className = 'memo';
+
+            var memoText = document.createElement('div');
+            memoText.innerText = memoObject.text;
+            newMemo.appendChild(memoText);
+
+            var timestamp = document.createElement('div');
+            timestamp.className = 'timestamp';
+            timestamp.innerText = memoObject.timestamp;
+            newMemo.appendChild(timestamp);
+
+            var deleteButton = document.createElement('div');
+            deleteButton.className = 'delete-button';
+            deleteButton.innerText = '削除';
+            deleteButton.onclick = function() {
+                memoDisplay.removeChild(newMemo);
+                deleteMemo(memoObject);
+            };
+            newMemo.appendChild(deleteButton);
+
+            var editButton = document.createElement('div');
+            editButton.className = 'edit-button';
+            editButton.innerText = '編集';
+            editButton.onclick = function() {
+                editMemo(memoObject, memoText);
+            };
+            newMemo.appendChild(editButton);
+
+            memoDisplay.appendChild(newMemo);
+        }
+
+        function deleteMemo(memoObject) {
+            var memos = JSON.parse(localStorage.getItem('memos')) || [];
+            var updatedMemos = memos.filter(memo => memo.timestamp !== memoObject.timestamp);
+            localStorage.setItem('memos', JSON.stringify(updatedMemos));
+        }
+
+        function editMemo(memoObject, memoTextElement) {
+            var newText = prompt('メモを編集:', memoObject.text);
+            if (newText !== null && newText.trim() !== '') {
+                memoObject.text = newText;
+                memoTextElement.innerText = newText;
+                updateMemo(memoObject);
+            }
+        }
+
+        function updateMemo(updatedMemo) {
+            var memos = JSON.parse(localStorage.getItem('memos')) || [];
+            var memoIndex = memos.findIndex(memo => memo.timestamp === updatedMemo.timestamp);
+            if (memoIndex !== -1) {
+                memos[memoIndex] = updatedMemo;
+                localStorage.setItem('memos', JSON.stringify(memos));
+            }
+        }
+    </script>
+</body>
+</html>

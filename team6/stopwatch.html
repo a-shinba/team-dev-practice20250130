@@ -13,11 +13,12 @@
             margin: 0;
             font-family: Arial, sans-serif;
         }
-        #container {
+        #container, #alarmContainer {
             text-align: center;
             border: 2px solid black;
             padding: 20px;
             border-radius: 10px;
+            margin: 10px;
         }
         #time {
             font-size: 5em;
@@ -28,10 +29,16 @@
             padding: 10px 20px;
             margin: 5px;
         }
-        input {
-            font-size: 1em;
-            padding: 10px;
-            margin: 5px;
+        #setAlarmBtn, #stopAlarmBtn {
+            font-size: 1.5em;
+            padding: 15px 30px;
+        }
+        #stopAlarmBtn {
+            display: none;
+        }
+        #laps {
+            margin-top: 20px;
+            text-align: left;
         }
     </style>
 </head>
@@ -41,9 +48,14 @@
         <button id="startBtn">スタート</button>
         <button id="stopBtn" disabled>ストップ</button>
         <button id="resetBtn">リセット</button>
-        <br>
+        <button id="lapBtn" disabled>ラップ</button>
+        <div id="laps"></div>
+    </div>
+
+    <div id="alarmContainer">
         <input type="time" id="alarmTime" step="1">
         <button id="setAlarmBtn">アラーム設定</button>
+        <button id="stopAlarmBtn">アラーム停止</button>
     </div>
 
     <script>
@@ -52,20 +64,24 @@
         let difference = 0;
         let timerInterval;
         let running = false;
-        let alarmTime = null;
+        let alarmTime = localStorage.getItem('alarmTime') || null;
 
         const timeDisplay = document.getElementById('time');
         const startBtn = document.getElementById('startBtn');
         const stopBtn = document.getElementById('stopBtn');
         const resetBtn = document.getElementById('resetBtn');
+        const lapBtn = document.getElementById('lapBtn');
         const alarmInput = document.getElementById('alarmTime');
         const setAlarmBtn = document.getElementById('setAlarmBtn');
+        const stopAlarmBtn = document.getElementById('stopAlarmBtn');
+        const lapsContainer = document.getElementById('laps');
 
         function startStopwatch() {
             startTime = new Date().getTime() - difference;
             timerInterval = setInterval(updateTime, 1000);
             startBtn.disabled = true;
             stopBtn.disabled = false;
+            lapBtn.disabled = false;
             running = true;
         }
 
@@ -73,6 +89,7 @@
             clearInterval(timerInterval);
             startBtn.disabled = false;
             stopBtn.disabled = true;
+            lapBtn.disabled = true;
             running = false;
         }
 
@@ -81,9 +98,10 @@
             timeDisplay.textContent = '00:00:00';
             startBtn.disabled = false;
             stopBtn.disabled = true;
+            lapBtn.disabled = true;
             difference = 0;
             running = false;
-            alarmTime = null;
+            lapsContainer.innerHTML = '';
         }
 
         function updateTime() {
@@ -97,17 +115,41 @@
             if (alarmTime && timeDisplay.textContent === alarmTime) {
                 alert('アラーム時間です！');
                 alarmTime = null;
+                localStorage.removeItem('alarmTime');
+                stopAlarmBtn.style.display = 'block';
             }
         }
 
         function setAlarm() {
             alarmTime = alarmInput.value;
+            localStorage.setItem('alarmTime', alarmTime);
+            stopAlarmBtn.style.display = 'none';
+        }
+
+        function stopAlarm() {
+            alarmTime = null;
+            localStorage.removeItem('alarmTime');
+            stopAlarmBtn.style.display = 'none';
+        }
+
+        function recordLap() {
+            const lapTime = timeDisplay.textContent;
+            const lapElement = document.createElement('div');
+            lapElement.textContent = `ラップ: ${lapTime}`;
+            lapsContainer.appendChild(lapElement);
         }
 
         startBtn.addEventListener('click', startStopwatch);
         stopBtn.addEventListener('click', stopStopwatch);
         resetBtn.addEventListener('click', resetStopwatch);
         setAlarmBtn.addEventListener('click', setAlarm);
+        stopAlarmBtn.addEventListener('click', stopAlarm);
+        lapBtn.addEventListener('click', recordLap);
+
+        // ページ読み込み時にアラーム時間を復元
+        if (alarmTime) {
+            alarmInput.value = alarmTime;
+        }
     </script>
 </body>
 </html>

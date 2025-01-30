@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メモ帳アプリ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .memo {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+            position: relative;
+        }
+        .memo button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #f44336;
+        }
+        .memo button:hover {
+            background-color: #e53935;
+        }
+        .edit-button {
+            position: absolute;
+            top: 10px;
+            right: 60px;
+            background-color: #ff9800;
+        }
+        .edit-button:hover {
+            background-color: #fb8c00;
+        }
+        .search-bar {
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>メモ帳アプリ</h1>
+    <textarea id="memoInput" placeholder="ここにメモを入力してください"></textarea>
+    <button onclick="saveMemo()">保存</button>
+    <input type="text" id="searchInput" class="search-bar" placeholder="メモを検索">
+    <div id="memoDisplay"></div>
+
+    <script>
+        let memos = JSON.parse(localStorage.getItem('memos')) || [];
+
+        document.getElementById('searchInput').addEventListener('input', displayMemos);
+
+        function saveMemo() {
+            const memoInput = document.getElementById('memoInput');
+            const memoText = memoInput.value;
+            if (memoText.trim() !== '') {
+                memos.push(memoText);
+                memoInput.value = '';
+                localStorage.setItem('memos', JSON.stringify(memos));
+                displayMemos();
+            }
+        }
+
+        function deleteMemo(index) {
+            memos.splice(index, 1);
+            localStorage.setItem('memos', JSON.stringify(memos));
+            displayMemos();
+        }
+
+        function editMemo(index) {
+            const memoInput = document.getElementById('memoInput');
+            memoInput.value = memos[index];
+            deleteMemo(index);
+        }
+
+        function displayMemos() {
+            const memoDisplay = document.getElementById('memoDisplay');
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            memoDisplay.innerHTML = '';
+            memos.forEach((memo, index) => {
+                if (memo.toLowerCase().includes(searchInput)) {
+                    const memoDiv = document.createElement('div');
+                    memoDiv.className = 'memo';
+                    memoDiv.innerText = memo;
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerText = '削除';
+                    deleteButton.onclick = () => deleteMemo(index);
+                    memoDiv.appendChild(deleteButton);
+                    const editButton = document.createElement('button');
+                    editButton.innerText = '編集';
+                    editButton.className = 'edit-button';
+                    editButton.onclick = () => editMemo(index);
+                    memoDiv.appendChild(editButton);
+                    memoDisplay.appendChild(memoDiv);
+                }
+            });
+        }
+
+        displayMemos();
+    </script>
+</body>
+</html>

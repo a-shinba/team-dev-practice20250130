@@ -15,86 +15,110 @@
             margin-top: 50px;
         }
 
+        #lapList {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
 
+        .lap-item {
+            font-size: 1.2em;
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
-    <div class="stopwatch">
-        <div id="time">00:00:00</div>
-        <button id="startStopBtn">スタート</button>
-        <button id="rapBtn">ラップ</button>
-        <button id="resetBtn">リセット</button>
-        <a href="./workshop1.html" class="btn btn--yellow btn--circle">戻る</a>
-    </div>
+<div class="stopwatch">
+    <div id="time">00:00:00</div>
+    <button id="startStopBtn">スタート</button>
+    <button id="rapBtn">ラップ</button>
+    <button id="resetBtn">リセット</button>
+    <a href="./workshop1.html" class="btn btn--yellow btn--circle">戻る</a>
+    <div id="lapList" class="lap-item"></div>
+</div>
 
-    <script>
-        let startTime;
-        let updatedTime;
-        let difference;
-        let timerInterval;
-        let running = false;
-        let rapcount = 0;
+<script>
+    let startTime;
+    let updatedTime;
+    let difference;
+    let timerInterval;
+    let running = false;
+    let lapcount = 0;
 
-        const timeDisplay = document.getElementById('time');
-        const startStopBtn = document.getElementById('startStopBtn');
-        const rapBtn = document.getElementById('rapBtn');
-        const resetBtn = document.getElementById('resetBtn');
+    const timeDisplay = document.getElementById('time');
+    const startStopBtn = document.getElementById('startStopBtn');
+    const rapBtn = document.getElementById('rapBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const lapList = document.getElementById('lapList');
 
-        function startStopwatch() {
-            startTime = new Date().getTime();
-            timerInterval = setInterval(updateTime, 1000);
-            startStopBtn.textContent = 'ストップ';
+    function startStopwatch() {
+        startTime = new Date().getTime() - (difference || 0);
+        timerInterval = setInterval(updateTime, 1000);
+        startStopBtn.textContent = 'ストップ';
+    }
+
+    function stopStopwatch() {
+        clearInterval(timerInterval);
+        startStopBtn.textContent = 'スタート';
+    }
+
+    function rapStopwatch() {
+        lapcount++;
+        const lapTime = timeDisplay.textContent;
+        const lap = document.createElement('div');
+        lap.textContent = `ラップ${lapcount}: ${lapTime}`;
+        lap.classList.add('lap-item');
+        lapList.appendChild(lap);
+    }
+
+    function updateTime() {
+        updatedTime = new Date().getTime();
+        difference = updatedTime - startTime;
+        let hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        timeDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    }
+
+    function resetStopwatch() {
+        clearInterval(timerInterval);
+        timeDisplay.textContent = '00:00:00';
+        startStopBtn.textContent = 'スタート';
+        running = false;
+        difference = 0;
+        lapList.innerHTML = '';
+        lapcount = 0;
+    }
+
+    function pad(number) {
+        return number < 10 ? '0' + number : number;
+    }
+
+    startStopBtn.addEventListener('click', () => {
+        if (running) {
+            stopStopwatch();
+        } else {
+            startStopwatch();
         }
+        running = !running;
+    });
 
-        function stopStopwatch() {
-            clearInterval(timerInterval);
-            startStopBtn.textContent = 'スタート';
-        }
+    resetBtn.addEventListener('click', () => {
+        resetStopwatch();
+    });
 
-        function rapStopwatch() {
-            rapcount++;
-            let lapTime = timeDisplay.textContent;
-            let lap = document.createElement('div');
-            lap.textContent = `ラップ${rapcount}: ${lapTime}`;
-            document.body.appendChild(lap);
-        }
-
-        function updateTime() {
-            updatedTime = new Date().getTime();
-            difference = updatedTime - startTime;
-            let hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((difference % (1000 * 60)) / 1000);
-            timeDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-        }
-
-        function resetStopwatch() {
-            clearInterval(timerInterval);
-            timeDisplay.textContent = '00:00:00';
-            startStopBtn.textContent = 'スタート';
-            running = false;
-        }
-
-        function pad(number) {
-            return number < 10 ? '0' + number : number;
-        }
-
-        startStopBtn.addEventListener('click', () => {
-            if (running) {
-                stopStopwatch();
-            } else {
-                startStopwatch();
-            }
-            running = !running;
-        });
-
-        resetBtn.addEventListener('click', () => {
-            resetStopwatch();
-        });
-
-        rapBtn.addEventListener('click', () => {
+    rapBtn.addEventListener('click', () => {
+        if (running) {
             rapStopwatch();
-        });
-    </script>
+        }
+    });
+</script>
 </body>
 </html>

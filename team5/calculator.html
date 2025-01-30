@@ -21,18 +21,16 @@
     <button onclick="appendNumber(9)">9</button>
     <button onclick="add()">+</button>
     <button onclick="subtract()">-</button>
-    <button onclick="multiply()">x</button>
+    <button onclick="multiply()">×</button>
     <button onclick="div()">/</button>
     <button onclick="calculate()">=</button>
+    <button onclick="clearDisplay()">AC</button>
 </div>
-
-<div id="history"></div>
 
 <script>
 let operand1 = '';
 let operand2 = '';
 let operator = null;
-let resultHistory = [];
 
 function appendNumber(number) {
     if (operator === null) {
@@ -90,7 +88,13 @@ function calculate() {
         operand2 = '';
         operator = null;
     }
-    resultHistory.push(operand1); 
+    updateDisplay();
+}
+
+function clearDisplay() {
+    operand1 = '';
+    operand2 = '';
+    operator = null;
     updateDisplay();
 }
 
@@ -103,14 +107,6 @@ function updateDisplay() {
         displayValue += operand2;
     }
     document.getElementById('display').value = displayValue;
-
-    let historyDisplay = document.getElementById('history');
-        historyDisplay.innerHTML = '';
-        resultHistory.forEach(result => {
-            let historyItem = document.createElement('div');
-            historyItem.innerText = result;
-            historyDisplay.appendChild(historyItem);
-        });
 }
 </script>
 

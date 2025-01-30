@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ストップウォッチ</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        #stopwatchContainer {
+            border: 2px solid #333; /* 枠のスタイルを追加 */
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #time {
+            font-size: 5em; /* 文字サイズを大きくする */
+            margin-bottom: 20px;
+            color: #333;
+        }
+        button {
+            font-size: 1.5em; /* ボタンの文字サイズを大きくする */
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #startStopBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #resetBtn {
+            background-color: #f44336;
+            color: white;
+        }
+        #saveBtn {
+            background-color: #2196F3;
+            color: white;
+        }
+        #lapTimes, #savedTimes {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 400px;
+        }
+        .lapTime, .savedTime {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.5em; /* ラップタイムの文字サイズを大きくする */
+        }
+    </style>
+</head>
+<body>
+    <div id="stopwatchContainer">
+        <div id="time">00:00:00</div>
+        <button id="startStopBtn">スタート</button>
+        <button id="resetBtn">リセット</button>
+        <button id="saveBtn">保存</button>
+        <div id="lapTimes"></div>
+        <div id="savedTimes"></div>
+    </div>
+ 
+    <script>
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerInterval;
+        let running = false;
+ 
+        const timeDisplay = document.getElementById('time');
+        const startStopBtn = document.getElementById('startStopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const lapTimes = document.getElementById('lapTimes');
+        const savedTimes = document.getElementById('savedTimes');
+ 
+        function startStopwatch() {
+            startTime = Date.now() - elapsedTime;
+            timerInterval = requestAnimationFrame(updateTime);
+            startStopBtn.textContent = 'ストップ';
+        }
+ 
+        function stopStopwatch() {
+            cancelAnimationFrame(timerInterval);
+            elapsedTime = Date.now() - startTime;
+            startStopBtn.textContent = 'スタート';
+            recordLapTime();
+        }
+ 
+        function resetStopwatch() {
+            cancelAnimationFrame(timerInterval);
+            elapsedTime = 0;
+            timeDisplay.textContent = '00:00:00';
+            startStopBtn.textContent = 'スタート';
+            running = false;
+            lapTimes.innerHTML = '';
+            savedTimes.innerHTML = '';
+        }
+ 
+        function updateTime() {
+            let difference = Date.now() - startTime;
+            let hours = Math.floor(difference / (1000 * 60 * 60));
+            let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            timeDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            timerInterval = requestAnimationFrame(updateTime);
+        }
+ 
+        function pad(number) {
+            return number < 10 ? '0' + number : number;
+        }
+
+        function recordLapTime() {
+            const lapTime = document.createElement('div');
+            lapTime.className = 'lapTime';
+            lapTime.textContent = timeDisplay.textContent;
+            lapTimes.appendChild(lapTime);
+        }
+
+        function saveTime() {
+            const savedTime = document.createElement('div');
+            savedTime.className = 'savedTime';
+            savedTime.textContent = timeDisplay.textContent;
+            savedTimes.appendChild(savedTime);
+        }
+ 
+        startStopBtn.addEventListener('click', () => {
+            running ? stopStopwatch() : startStopwatch();
+            running = !running;
+        });
+ 
+        resetBtn.addEventListener('click', resetStopwatch);
+        saveBtn.addEventListener('click', saveTime);
+    </script>
+</body>
+</html>

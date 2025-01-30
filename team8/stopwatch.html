@@ -9,13 +9,22 @@
             font-size: 2em;
             margin-bottom: 20px;
         }
+
+        .stopwatch {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+
     </style>
 </head>
 <body>
-    <div id="time">00:00:00</div>
-    <button id="startStopBtn">スタート</button>
-    <button id="resetBtn">リセット</button>
-    <a href="./workshop1.html">戻る</a>
+    <div class="stopwatch">
+        <div id="time">00:00:00</div>
+        <button id="startStopBtn">スタート</button>
+        <button id="resetBtn">リセット</button>
+        <button><a href="./workshop1.html">戻る</a></button>
+    </div>
 
     <script>
         let startTime;

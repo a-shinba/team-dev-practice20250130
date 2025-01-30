@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ストップウォッチ</title>
+    <style>
+        #time {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="time">00:00:00</div>
+    <button id="startStopBtn">スタート</button>
+    <button id="resetBtn">リセット</button>
+
+    <script>
+        let startTime;
+        let updatedTime;
+        let difference;
+        let timerInterval;
+        let running = false;
+
+        const timeDisplay = document.getElementById('time');
+        const startStopBtn = document.getElementById('startStopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function startStopwatch() {
+            startTime = new Date().getTime();
+            timerInterval = setInterval(updateTime, 1000);
+            startStopBtn.textContent = 'ストップ';
+        }
+
+        function stopStopwatch() {
+            clearInterval(timerInterval);
+            startStopBtn.textContent = 'スタート';
+        }
+
+        function updateTime() {
+            updatedTime = new Date().getTime();
+            difference = updatedTime - startTime;
+            let hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            timeDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        }
+
+        function resetStopwatch() {
+            clearInterval(timerInterval);
+            timeDisplay.textContent = '00:00:00';
+            startStopBtn.textContent = 'スタート';
+            running = false;
+        }
+
+        function pad(number) {
+            return number < 10 ? '0' + number : number;
+        }
+
+        startStopBtn.addEventListener('click', () => {
+            if (running) {
+                stopStopwatch();
+            } else {
+                startStopwatch();
+            }
+            running = !running;
+        });
+
+        resetBtn.addEventListener('click', () => {
+            resetStopwatch();
+        });
+    </script>
+</body>
+</html>

@@ -9,11 +9,17 @@
             font-size: 2em;
             margin-bottom: 20px;
         }
+        #laps {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div id="time">00:00:00</div>
     <button id="startStopBtn">スタート</button>
+    <button id="lapBtn" disabled>ラップ</button>
+    <button id="resetBtn" disabled>リセット</button>
+    <div id="laps"></div>
 
     <script>
         let startTime;
@@ -24,16 +30,22 @@
 
         const timeDisplay = document.getElementById('time');
         const startStopBtn = document.getElementById('startStopBtn');
+        const lapBtn = document.getElementById('lapBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const lapsContainer = document.getElementById('laps');
 
         function startStopwatch() {
             startTime = new Date().getTime();
             timerInterval = setInterval(updateTime, 1000);
             startStopBtn.textContent = 'ストップ';
+            lapBtn.disabled = false;
+            resetBtn.disabled = false;
         }
 
         function stopStopwatch() {
             clearInterval(timerInterval);
             startStopBtn.textContent = 'スタート';
+            lapBtn.disabled = true;
         }
 
         function updateTime() {
@@ -42,11 +54,24 @@
             let hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((difference % (1000 * 60)) / 1000);
-            timeDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            timeDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
 
-        function pad(number) {
-            return number < 10 ? '0' + number : number;
+        function recordLap() {
+            const lapTime = timeDisplay.textContent;
+            const lapElement = document.createElement('div');
+            lapElement.textContent = `ラップ: ${lapTime}`;
+            lapsContainer.appendChild(lapElement);
+        }
+
+        function resetStopwatch() {
+            clearInterval(timerInterval);
+            timeDisplay.textContent = '00:00:00';
+            lapsContainer.innerHTML = '';
+            startStopBtn.textContent = 'スタート';
+            lapBtn.disabled = true;
+            resetBtn.disabled = true;
+            running = false;
         }
 
         startStopBtn.addEventListener('click', () => {
@@ -57,6 +82,9 @@
             }
             running = !running;
         });
+
+        lapBtn.addEventListener('click', recordLap);
+        resetBtn.addEventListener('click', resetStopwatch);
     </script>
 </body>
 </html>

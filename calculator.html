@@ -1,26 +1,75 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        #calculator {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #display {
+            width: 100%;
+            height: 50px;
+            font-size: 2em;
+            text-align: right;
+            margin-bottom: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            height: 50px;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        button:active {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
 <body>
 
-<h1>シンプルな計算機</h1>
-
-<input id="display" type="text" readonly>
-
-<br>
-
-<div id="buttons">
-    <button onclick="appendNumber(0)">0</button>
-    <button onclick="appendNumber(1)">1</button>
-    <button onclick="appendNumber(2)">2</button>
-    <button onclick="appendNumber(3)">3</button>
-    <button onclick="appendNumber(4)">4</button>
-    <button onclick="appendNumber(5)">5</button>
-    <button onclick="appendNumber(6)">6</button>
-    <button onclick="appendNumber(7)">7</button>
-    <button onclick="appendNumber(8)">8</button>
-    <button onclick="appendNumber(9)">9</button>
-    <button onclick="add()">+</button>
-    <button onclick="calculate()">=</button>
+<div id="calculator">
+    <h1>計算機</h1>
+    <input id="display" type="text" readonly>
+    <br>
+    <div id="buttons">
+        <button onclick="appendNumber(7)">7</button>
+        <button onclick="appendNumber(8)">8</button>
+        <button onclick="appendNumber(9)">9</button>
+        <button onclick="setOperator('/')">/</button>
+        <button onclick="appendNumber(4)">4</button>
+        <button onclick="appendNumber(5)">5</button>
+        <button onclick="appendNumber(6)">6</button>
+        <button onclick="setOperator('*')">*</button>
+        <button onclick="appendNumber(1)">1</button>
+        <button onclick="appendNumber(2)">2</button>
+        <button onclick="appendNumber(3)">3</button>
+        <button onclick="setOperator('-')">-</button>
+        <button onclick="appendNumber(0)">0</button>
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="setOperator('+')">+</button>
+    </div>
 </div>
 
 <script>
@@ -37,30 +86,43 @@ function appendNumber(number) {
     updateDisplay();
 }
 
-function add() {
-    operator = '+';
+function setOperator(op) {
+    if (operand1 !== '') {
+        operator = op;
+    }
     updateDisplay();
 }
 
 function calculate() {
+    let result;
+    const num1 = parseFloat(operand1);
+    const num2 = parseFloat(operand2);
+
     if (operator === '+') {
-        let result = parseInt(operand1) + parseInt(operand2);
-        operand1 = result;
-        operand2 = '';
-        operator = null;
+        result = num1 + num2;
+    } else if (operator === '-') {
+        result = num1 - num2;
+    } else if (operator === '*') {
+        result = num1 * num2;
+    } else if (operator === '/') {
+        result = num1 / num2;
     }
+
+    operand1 = result.toString();
+    operand2 = '';
+    operator = null;
+    updateDisplay();
+}
+
+function clearDisplay() {
+    operand1 = '';
+    operand2 = '';
+    operator = null;
     updateDisplay();
 }
 
 function updateDisplay() {
-    let displayValue = operand1;
-    if (operator !== null) {
-        displayValue += operator;
-    }
-    if (operand2 !== '') {
-        displayValue += operand2;
-    }
-    document.getElementById('display').value = displayValue;
+    document.getElementById('display').value = operand1 + (operator ? ' ' + operator + ' ' : '') + operand2;
 }
 </script>
 

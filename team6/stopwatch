@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ストップウォッチ</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      #container {
+        text-align: center;
+        border: 2px solid black;
+        padding: 20px;
+        border-radius: 10px;
+      }
+      #time {
+        font-size: 5em;
+        margin-bottom: 20px;
+      }
+      button {
+        font-size: 1em;
+        padding: 10px 20px;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="time">00:00:00</div>
+      <button id="startBtn">スタート</button>
+      <button id="stopBtn" disabled>ストップ</button>
+      <button id="resetBtn">リセット</button>
+    </div>
+
+    <script>
+      let startTime;
+      let updatedTime;
+      let difference = 0;
+      let timerInterval;
+      let running = false;
+
+      const timeDisplay = document.getElementById("time");
+      const startBtn = document.getElementById("startBtn");
+      const stopBtn = document.getElementById("stopBtn");
+      const resetBtn = document.getElementById("resetBtn");
+
+      function startStopwatch() {
+        startTime = new Date().getTime() - difference;
+        timerInterval = setInterval(updateTime, 1000);
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        running = true;
+      }
+
+      function stopStopwatch() {
+        clearInterval(timerInterval);
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        running = false;
+      }
+
+      function resetStopwatch() {
+        clearInterval(timerInterval);
+        timeDisplay.textContent = "00:00:00";
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        difference = 0;
+        running = false;
+      }
+
+      function updateTime() {
+        updatedTime = new Date().getTime();
+        difference = updatedTime - startTime;
+        let hours = Math.floor(
+          (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        timeDisplay.textContent = `${String(hours).padStart(2, "0")}:${String(
+          minutes
+        ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      startBtn.addEventListener("click", startStopwatch);
+      stopBtn.addEventListener("click", stopStopwatch);
+      resetBtn.addEventListener("click", resetStopwatch);
+    </script>
+  </body>
+</html>
+コンテキスト メニューあり

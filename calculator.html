@@ -1,66 +1,266 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>関数電卓</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #calculator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+        #display {
+            width: 100%;
+            padding: 15px;
+            font-size: 24px;
+            text-align: right;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        #buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 20px;
+            font-size: 18px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+        .span-two {
+            grid-column: span 2;
+        }
+        .span-three {
+            grid-column: span 3;
+        }
+        #history {
+            width: 100%;
+            max-width: 220px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #history ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        #history li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ccc;
+        }
+        #history li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
 <body>
 
-<h1>シンプルな計算機</h1>
+<div id="calculator">
+    <h1>関数電卓</h1>
+    <input id="display" type="text" readonly>
 
-<input id="display" type="text" readonly>
+    <div id="buttons">
+        <button onclick="clearAll()" class="span-two">AC</button>
+        <button onclick="appendParenthesis('(')">(</button>
+        <button onclick="appendParenthesis(')')">)</button>
+        <button onclick="backspace()">⌫</button>
+        <button onclick="sqrt()">√</button>
+        <button onclick="appendNumber(7)">7</button>
+        <button onclick="appendNumber(8)">8</button>
+        <button onclick="appendNumber(9)">9</button>
+        <button onclick="divide()">/</button>
+        <button onclick="percent()">%</button>
+        <button onclick="appendNumber(4)">4</button>
+        <button onclick="appendNumber(5)">5</button>
+        <button onclick="appendNumber(6)">6</button>
+        <button onclick="multiply()">*</button>
+        <button onclick="power()">^</button>
+        <button onclick="appendNumber(1)">1</button>
+        <button onclick="appendNumber(2)">2</button>
+        <button onclick="appendNumber(3)">3</button>
+        <button onclick="subtract()">-</button>
+        <button onclick="appendDecimal()">.</button>
+        <button onclick="appendNumber(0)" class="span-two">0</button>
+        <button onclick="add()">+</button>
+        <button onclick="calculate()" class="span-three">=</button>
+    </div>
+</div>
 
-<br>
-
-<div id="buttons">
-    <button onclick="appendNumber(0)">0</button>
-    <button onclick="appendNumber(1)">1</button>
-    <button onclick="appendNumber(2)">2</button>
-    <button onclick="appendNumber(3)">3</button>
-    <button onclick="appendNumber(4)">4</button>
-    <button onclick="appendNumber(5)">5</button>
-    <button onclick="appendNumber(6)">6</button>
-    <button onclick="appendNumber(7)">7</button>
-    <button onclick="appendNumber(8)">8</button>
-    <button onclick="appendNumber(9)">9</button>
-    <button onclick="add()">+</button>
-    <button onclick="calculate()">=</button>
+<div id="history">
+    <h2>履歴</h2>
+    <button onclick="clearHistory()">履歴をクリア</button>
+    <ul id="history-list"></ul>
 </div>
 
 <script>
-let operand1 = '';
-let operand2 = '';
-let operator = null;
+let expression = '';
+let history = [];
 
 function appendNumber(number) {
-    if (operator === null) {
-        operand1 += number;
-    } else {
-        operand2 += number;
+    if (expression === 'Error') {
+        expression = '';
     }
+    expression += number;
+    updateDisplay();
+}
+
+function appendDecimal() {
+    if (expression === 'Error') {
+        expression = '';
+    }
+    expression += '.';
     updateDisplay();
 }
 
 function add() {
-    operator = '+';
+    if (expression.length > 0 && !isOperator(expression.slice(-1))) {
+        expression += '+';
+        updateDisplay();
+    }
+}
+
+function subtract() {
+    if (expression.length > 0 && !isOperator(expression.slice(-1))) {
+        expression += '-';
+        updateDisplay();
+    }
+}
+
+function multiply() {
+    if (expression.length > 0 && !isOperator(expression.slice(-1))) {
+        expression += '*';
+        updateDisplay();
+    }
+}
+
+function divide() {
+    if (expression.length > 0 && !isOperator(expression.slice(-1))) {
+        expression += '/';
+        updateDisplay();
+    }
+}
+
+function sqrt() {
+    if (expression === '' || (expression.length > 0 && !isOperator(expression.slice(-1)))) {
+        expression += '√(';
+        updateDisplay();
+    }
+}
+
+function power() {
+    if (expression.length > 0 && !isOperator(expression.slice(-1))) {
+        expression += '**';
+        updateDisplay();
+    }
+}
+
+function percent() {
+    if (expression.length > 0 && !isOperator(expression.slice(-1))) {
+        expression += '/100';
+        updateDisplay();
+    }
+}
+
+function appendParenthesis(parenthesis) {
+    if (expression === 'Error') {
+        expression = '';
+    }
+    expression += parenthesis;
+    updateDisplay();
+}
+
+function backspace() {
+    if (expression === 'Error') {
+        expression = '';
+    } else {
+        expression = expression.slice(0, -1);
+    }
     updateDisplay();
 }
 
 function calculate() {
-    if (operator === '+') {
-        let result = parseInt(operand1) + parseInt(operand2);
-        operand1 = result;
-        operand2 = '';
-        operator = null;
+    try {
+        if (expression.includes('/0')) {
+            throw new Error('Division by zero');
+        }
+        // Replace '√' with 'Math.sqrt'
+        expression = expression.replace(/√/g, 'Math.sqrt');
+        
+        // Automatically close any unclosed parentheses
+        let openParentheses = (expression.match(/\(/g) || []).length;
+        let closeParentheses = (expression.match(/\)/g) || []).length;
+        while (openParentheses > closeParentheses) {
+            expression += ')';
+            closeParentheses++;
+        }
+
+        const result = eval(expression).toString();
+        history.push(`${expression.replace(/Math.sqrt/g, '√')} = ${result}`);
+        expression = result;
+        updateHistory();
+    } catch (e) {
+        expression = 'Error';
     }
     updateDisplay();
 }
 
+function clearAll() {
+    expression = '';
+    updateDisplay();
+}
+
+function clearHistory() {
+    history = [];
+    updateHistory();
+}
+
 function updateDisplay() {
-    let displayValue = operand1;
-    if (operator !== null) {
-        displayValue += operator;
-    }
-    if (operand2 !== '') {
-        displayValue += operand2;
-    }
-    document.getElementById('display').value = displayValue;
+    document.getElementById('display').value = expression;
+}
+
+function updateHistory() {
+    const historyList = document.getElementById('history-list');
+    historyList.innerHTML = '';
+    history.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        historyList.appendChild(li);
+    });
+}
+
+function isOperator(char) {
+    return ['+', '-', '*', '/', '**', '√'].includes(char);
 }
 </script>
 

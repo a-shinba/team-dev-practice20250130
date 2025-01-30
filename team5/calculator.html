@@ -27,6 +27,7 @@
     <button onclick="multiply()">×</button>
     <button onclick="div()">/</button>
     <button onclick="calculate()">=</button>
+    <button onclick="clearDisplay()">AC</button>
 </div>
 
 <script>
@@ -90,6 +91,13 @@ function calculate() {
         operand2 = '';
         operator = null;
     }
+    updateDisplay();
+}
+
+function clearDisplay() {
+    operand1 = '';
+    operand2 = '';
+    operator = null;
     updateDisplay();
 }
 

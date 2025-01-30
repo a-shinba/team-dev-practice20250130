@@ -14,6 +14,7 @@
 <body>
     <div id="time">00:00:00</div>
     <button id="startStopBtn">スタート</button>
+    <button id="resetBtn">リセット</button>
 
     <script>
         let startTime;
@@ -24,6 +25,7 @@
 
         const timeDisplay = document.getElementById('time');
         const startStopBtn = document.getElementById('startStopBtn');
+        const resetBtn = document.getElementById('resetBtn');
 
         function startStopwatch() {
             startTime = new Date().getTime();
@@ -45,6 +47,13 @@
             timeDisplay.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
         }
 
+        function resetStopwatch() {
+            clearInterval(timerInterval);
+            timeDisplay.textContent = '00:00:00';
+            startStopBtn.textContent = 'スタート';
+            running = false;
+        }
+
         function pad(number) {
             return number < 10 ? '0' + number : number;
         }
@@ -56,6 +65,10 @@
                 startStopwatch();
             }
             running = !running;
+        });
+
+        resetBtn.addEventListener('click', () => {
+            resetStopwatch();
         });
     </script>
 </body>

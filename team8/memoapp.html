@@ -7,10 +7,13 @@
     <link rel="stylesheet" href="./styles/style.css">
 </head>
 <body>
-<h1>メモ帳アプリ</h1>
-<textarea id="memoInput" placeholder="ここにメモを入力してください"></textarea>
-<button onclick="saveMemo()">保存</button>
-<div id="memoDisplay" class="memo"></div>
+<div class="container">
+    <h1>メモ帳アプリ</h1>
+    <textarea id="memoInput" placeholder="ここにメモを入力してください"></textarea>
+    <button onclick="saveMemo()">保存</button>
+    <div id="memoDisplay" class="memo-list"></div>
+</div>
+
 
 <script>
     function saveMemo() {
@@ -28,7 +31,7 @@
     function fetchMemos() {
         const memos = JSON.parse(localStorage.getItem('memos')) || [];
         const memoDisplay = document.getElementById("memoDisplay");
-        memoDisplay.innerHTML = memos.map(memo => `<p>${memo.content}</p>`).join("");
+        memoDisplay.innerHTML = memos.map(memo => `<p class="memo">${memo.content}</p>`).join("");
     }
 
     document.addEventListener("DOMContentLoaded", fetchMemos);

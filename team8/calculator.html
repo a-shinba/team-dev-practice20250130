@@ -13,7 +13,7 @@
         }
         #buttons {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
         #display {
@@ -37,15 +37,19 @@
     <button onclick="appendNumber(7)">7</button>
     <button onclick="appendNumber(8)">8</button>
     <button onclick="appendNumber(9)">9</button>
+    <button onclick="setOperator('+')">+</button>
     <button onclick="appendNumber(4)">4</button>
     <button onclick="appendNumber(5)">5</button>
     <button onclick="appendNumber(6)">6</button>
+    <button onclick="setOperator('-')">-</button>
     <button onclick="appendNumber(1)">1</button>
     <button onclick="appendNumber(2)">2</button>
     <button onclick="appendNumber(3)">3</button>
+    <button onclick="setOperator('*')">*</button>
     <button onclick="appendNumber(0)">0</button>
-    <button onclick="add()">+</button>
     <button onclick="calculate()">=</button>
+    <button onclick="clearDisplay()">C</button>
+    <button onclick="setOperator('/')">/</button>
 </div>
 
 <a href="welcome.html">ウェルカムに戻る</a>
@@ -64,20 +68,39 @@ function appendNumber(number) {
     updateDisplay();
 }
 
-function add() {
+function setOperator(op) {
     if (operand1 !== '') {
-        operator = '+';
+        operator = op;
     }
     updateDisplay();
 }
 
 function calculate() {
-    if (operator === '+') {
-        let result = parseInt(operand1) + parseInt(operand2);
-        operand1 = result;
-        operand2 = '';
-        operator = null;
+    let result;
+    switch (operator) {
+        case '+':
+            result = parseInt(operand1) + parseInt(operand2);
+            break;
+        case '-':
+            result = parseInt(operand1) - parseInt(operand2);
+            break;
+        case '*':
+            result = parseInt(operand1) * parseInt(operand2);
+            break;
+        case '/':
+            result = parseInt(operand1) / parseInt(operand2);
+            break;
     }
+    operand1 = result;
+    operand2 = '';
+    operator = null;
+    updateDisplay();
+}
+
+function clearDisplay() {
+    operand1 = '';
+    operand2 = '';
+    operator = null;
     updateDisplay();
 }
 

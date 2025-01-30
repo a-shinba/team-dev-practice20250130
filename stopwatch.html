@@ -8,7 +8,7 @@
         body {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
@@ -16,6 +16,7 @@
         }
         #container {
             text-align: center;
+            margin-top: 50px; /* 中央より少し上に配置 */
         }
         #time {
             font-size: 3em;
@@ -26,13 +27,24 @@
             padding: 10px 20px;
             margin: 5px;
         }
+        #laps {
+            margin-top: 20px;
+            text-align: left;
+            overflow-y: auto;
+            width: 100%;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
     <div id="container">
         <div id="time">00:00:00.000</div>
-        <button id="startStopBtn">スタート</button>
-        <button id="resetBtn">リセット</button>
+        <div>
+            <button id="startStopBtn">スタート</button>
+            <button id="resetBtn">リセット</button>
+            <button id="lapBtn">ラップ</button>
+        </div>
+        <div id="laps"></div>
     </div>
 
     <script>
@@ -41,10 +53,14 @@
         let difference = 0;
         let timerInterval;
         let running = false;
+        let laps = [];
+        let lapCount = 0;
 
         const timeDisplay = document.getElementById('time');
         const startStopBtn = document.getElementById('startStopBtn');
         const resetBtn = document.getElementById('resetBtn');
+        const lapBtn = document.getElementById('lapBtn');
+        const lapsDisplay = document.getElementById('laps');
 
         function startStopwatch() {
             startTime = new Date().getTime() - difference;
@@ -86,6 +102,18 @@
             difference = 0;
             timeDisplay.innerHTML = "00:00:00.000";
             startStopBtn.textContent = 'スタート';
+            laps = [];
+            lapCount = 0;
+            lapsDisplay.innerHTML = '';
+        });
+
+        lapBtn.addEventListener('click', function() {
+            if (running) {
+                lapCount++;
+                let lapTime = timeDisplay.innerHTML;
+                laps.unshift(lapTime);
+                lapsDisplay.innerHTML = laps.map((lap, index) => `<div>ラップ ${lapCount - index}: ${lap}</div>`).join('');
+            }
         });
     </script>
 </body>
